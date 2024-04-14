@@ -1,12 +1,9 @@
 import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure } from "@chakra-ui/react";
-// import useUserProfileStore from "../../store/userProfileStore";
-// import useAuthStore from "../../store/authStore";
 import userAtom from "../../atoms/userAtom";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 // import { Link as RouterLink } from "react-router-dom";
 // import EditProfile from "./EditProfile";
-// import useFollowUser from "../../hooks/useFollowUser";
 import useFollowUnfollow from "../../hooks/useFollowUnfollow";
 import useGetUserProfile from "../../hooks/useGetUserProfile";
 
@@ -26,7 +23,7 @@ const ProfileHeader = ({ userProfile }) => {
 	return (
 		<Flex gap={{ base: 4, sm: 10 }} py={10} direction={{ base: "column", sm: "row" }}>
 			<AvatarGroup size={{ base: "xl", md: "2xl" }} justifySelf={"center"} alignSelf={"flex-start"} mx={"auto"}>
-				<Avatar src={userProfile.profilePic} alt='As a programmer logo' />
+				<Avatar src={userProfile.profilePic} alt='logo' />
 			</AvatarGroup>
 
 			<VStack alignItems={"start"} gap={2} mx={"auto"} flex={1}>
@@ -41,9 +38,9 @@ const ProfileHeader = ({ userProfile }) => {
 					{visitingOwnProfileAndAuth && (
 						<Flex gap={4} alignItems={"center"} justifyContent={"center"}>
 							<Button
-								bg={"white"}
-								color={"black"}
-								_hover={{ bg: "whiteAlpha.800" }}
+								bg={"#363636"}
+								color={"white"}
+								_hover={{ bg: "#242424" }}
 								size={{ base: "xs", md: "sm" }}
 								onClick={() => navigate("/update")}
 								// onClick={onOpen}

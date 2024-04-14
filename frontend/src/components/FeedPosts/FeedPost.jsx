@@ -1,14 +1,20 @@
 import { Box, Image } from "@chakra-ui/react";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
+import useGetUserProfile from "../../hooks/useGetUserProfile";
+import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 // import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 // import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import useShowToast from "../../hooks/useShowToast";
+import { useEffect } from "react";
 
 const FeedPost = ({ post, postedBy }) => {
-	// const { userProfile } = useGetUserProfileById(post.postedBy);
+	// console.log("postedBy", post);
+	// const { userProfile, isLoading } = useGetUserProfileById(postedBy);
+	// console.log("userProfile", userProfile);
+	// console.log("postedBy", postedBy);
 	const [user, setUser] = useState(null);
 	const showToast = useShowToast();
 	const location = useLocation();
@@ -20,21 +26,26 @@ const FeedPost = ({ post, postedBy }) => {
 	useEffect(() => {
 		const getUser = async () => {
 			try {
-				const res = await fetch("/api/users/profile/" + postedBy);
+				const res = await fetch(`/api/users/profile/${postedBy}`);
 				const data = await res.json();
 				if (data.error) {
 					showToast("Error", data.error, "error");
 					return;
 				}
 				setUser(data);
+				console.log("user", data);
 			} catch (error) {
 				showToast("Error", error.message, "error");
-				setUser(null);
+				// setUser("");
 			}
 		};
 
 		getUser();
 	}, [postedBy, showToast]);
+
+	if (!user) {
+		return null;
+	}
 
 	return (
 		<>

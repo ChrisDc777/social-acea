@@ -54,7 +54,7 @@ const FeedPosts = () => {
 					</VStack>
 				))}
 
-			{!loading && posts.length > 0 && posts.map((post) => <FeedPost key={post.id} post={post} postedBy={post.postedBy}/>)}
+			{!loading && posts.length > 0 && posts.map((post) => <FeedPost key={post._id} post={post} postedBy={post.postedBy}/>)}
 			{!loading && posts.length === 0 && (
 				<>
 					<Text fontSize={"md"} color={"red.400"}>

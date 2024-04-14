@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import './index.css'
+// import './index.css'
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
@@ -39,7 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 		<RecoilRoot>
 			<BrowserRouter>
 				<ChakraProvider theme={theme}>
-					<ColorModeScript initialColorMode={theme.config.initialColorMode} />
+					{/* <ColorModeScript initialColorMode={theme.config.initialColorMode} /> */}
 					<SocketContextProvider>
 						<App />
 					</SocketContextProvider>

@@ -6,7 +6,7 @@ import userAtom from "../../atoms/userAtom";
 
 const ProfileLink = () => {
 	const authUser = useRecoilValue(userAtom); 
-	console.log(authUser);
+	// console.log(authUser);
 	// const authUser = useAuthStore((state) => state.user);
 
 	return (

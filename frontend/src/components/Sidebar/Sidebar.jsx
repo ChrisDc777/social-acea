@@ -3,7 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { InstagramLogo, InstagramMobileLogo } from "../../assets/constants";
 // import { TheGram } from "../../assets/constants/TheGram";
 import TheGram from "../../assets/TheGram-removebg.png";
-
+import TheGramMobile from "../../assets/TheGram-mobile.png";
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
 import SidebarItems from "./SidebarItems";
@@ -39,7 +39,8 @@ const Sidebar = () => {
 					w={10}
 					cursor='pointer'
 				>
-					<InstagramMobileLogo />
+					<img src={TheGramMobile} alt="TheGram" style={{ width: "100%" }} /> {/* Modify the width here */}
+					{/* <InstagramMobileLogo /> */}
 				</Link>
 				<Flex direction={"column"} gap={5} cursor={"pointer"}>
 					<SidebarItems />

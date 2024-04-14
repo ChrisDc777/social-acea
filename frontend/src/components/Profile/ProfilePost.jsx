@@ -33,18 +33,21 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../../atoms/userAtom";
 import useGetUserProfile from "../../hooks/useGetUserProfile";
 import { useParams } from "react-router-dom";
-import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+// import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import {CommentLogo, LikeLogo} from "../../assets/constants"
 
 const ProfilePost = ({ post }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	// const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { username } = useParams(); // Get username from URL params
 	console.log("params", username);
-  	const { userProfile, loading } = useGetUserProfileById(username);
-	// const { userProfile, loading } = useGetUserProfile();
+  	// const { userProfile, loading } = useGetUserProfileById(username);
+	const { user, loading } = useGetUserProfile();
 	
-	console.log("bleh3",userProfile);
+	// console.log("bleh3",user);
+	
 	const authUser = useRecoilValue(userAtom);
+	// console.log("uid",authUser._id);
 	const showToast = useShowToast();
 	const [isDeleting, setIsDeleting] = useState(false);
 	// const deletePost = usePostStore((state) => state.deletePost);
@@ -123,14 +126,16 @@ const ProfilePost = ({ post }) => {
 				>
 					<Flex alignItems={"center"} justifyContent={"center"} gap={50}>
 						<Flex>
-							<AiFillHeart size={20} />
+							<LikeLogo/>
+							{/* <AiFillHeart size={20} /> */}
 							<Text fontWeight={"bold"} ml={2}>
 								{post.likes.length}
 							</Text>
 						</Flex>
 
 						<Flex>
-							<FaComment size={20} />
+							<CommentLogo/>
+							{/* <FaComment size={20} /> */}
 							<Text fontWeight={"bold"} ml={2}>
 								{post.replies.length}
 							</Text>
@@ -167,13 +172,12 @@ const ProfilePost = ({ post }) => {
 							<Flex flex={1} flexDir={"column"} px={10} display={{ base: "none", md: "flex" }}>
 								<Flex alignItems={"center"} justifyContent={"space-between"}>
 									<Flex alignItems={"center"} gap={4}>
-										<Avatar src={userProfile.profilePic} size={"sm"} name='As a Programmer' />
+										<Avatar src={user.profilePic} size={"sm"} name='As a Programmer' />
 										<Text fontWeight={"bold"} fontSize={12}>
-											{userProfile.username}
+											{user.username}
 										</Text>
 									</Flex>
-
-									{authUser?.uid === userProfile.uid && (
+									{authUser?._id === user._id && (
 										<Button
 											size={"sm"}
 											bg={"transparent"}

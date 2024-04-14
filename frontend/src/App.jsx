@@ -8,7 +8,7 @@ import ProfilePage from "./pages/ProfilePage";
 import UpdateProfilePage from "./components/Profile/UpdateProfilePage";
 import ChatPage from "./pages/ChatPage";
 import { SettingsPage } from "./pages/SettingsPage";
-import './App.css'
+// import './App.css'
 
 function App() {
   const user = useRecoilValue(userAtom);

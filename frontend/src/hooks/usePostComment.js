@@ -11,7 +11,7 @@ const usePostComment = () => {
     const showToast = useShowToast();
     const [posts, setPosts] = useRecoilState(postsAtom);
 
-    const handlePostComment = async (post) => {
+    const handlePostComment = async (post, commentText) => {
         if (!user) {
             showToast("Error", "You must be logged in to reply to a post", "error");
             return;
@@ -25,7 +25,7 @@ const usePostComment = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ text: reply }),
+                body: JSON.stringify({ text: commentText }),
             });
             const data = await res.json();
             if (data.error) {

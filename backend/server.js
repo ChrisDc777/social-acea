@@ -17,7 +17,7 @@ import job from "./cron/cron.js";
 dotenv.config();
 console.log("PORT:", process.env.PORT);
 connectDB();
-job.start();
+// job.start();
 
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();

@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../../atoms/userAtom";
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
+	console.log("postedBy", post);
 	const { isCommenting, handlePostComment } = usePostComment();
 	const [comment, setComment] = useState("");
 	const authUser = useRecoilValue(userAtom);
@@ -18,8 +19,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const handleSubmitComment = async () => {
-		await handlePostComment(post.id, comment);
+		await handlePostComment(post, comment);
 		setComment("");
+		commentRef.current.focus();
 	};
 
 	return (
@@ -51,9 +53,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 							{post.caption}
 						</Text>
 					</Text>
-					{post.comments.length > 0 && (
+					{post.replies.length > 0 && (
 						<Text fontSize='sm' color={"gray"} cursor={"pointer"} onClick={onOpen}>
-							View all {post.comments.length} comments
+							View all {post.replies.length} comments
 						</Text>
 					)}
 					{/* COMMENTS MODAL ONLY IN THE HOME PAGE */}

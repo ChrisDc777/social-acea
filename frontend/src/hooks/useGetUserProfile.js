@@ -1,34 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import useShowToast from "./useShowToast";
 
-const useGetUserProfile = (username) => {
-  const [userProfile, setUserProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+const useGetUserProfile = () => {
+	const [user, setUser] = useState("");
+	const [loading, setLoading] = useState(true);
+	const { username } = useParams();
+	const showToast = useShowToast();
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/users/profile/${username}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user profile');
-        }
-        const data = await response.json();
-        setUserProfile(data);
-        setLoading(false);
-      } catch (error) {
-		showToast("Error", error.message, "error");
-        console.error(error);
-        setLoading(false);
-      }
-    };
+	useEffect(() => {
+		const getUser = async () => {
+			try {
+				const res = await fetch(`/api/users/profile/${username}`);
+				const data = await res.json();
+				if (data.error) {
+					showToast("Error", data.error, "error");
+					return;
+				}
+				if (data.isFrozen) {
+					setUser("");
+					return;
+				}
+				setUser(data);
+			} catch (error) {
+				showToast("Error", error.message, "error");
+			} finally {
+				setLoading(false);
+			}
+		};
+		getUser();
+	}, [username, showToast]);
 
-    if (username) {
-      fetchUserProfile();
-    }
-
-  }, [username]);
-
-  return { userProfile, loading };
+	return { loading, user };
 };
 
 export default useGetUserProfile;
