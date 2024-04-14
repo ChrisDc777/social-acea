@@ -1,9 +1,13 @@
 import { Avatar, Box, Link, Tooltip } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import useAuthStore from "../../store/authStore";
+// import useAuthStore from "../../store/authStore";
+import { useRecoilValue } from "recoil";
+import userAtom from "../../atoms/userAtom";
 
 const ProfileLink = () => {
-	const authUser = useAuthStore((state) => state.user);
+	const authUser = useRecoilValue(userAtom); 
+	console.log(authUser);
+	// const authUser = useAuthStore((state) => state.user);
 
 	return (
 		<Tooltip
@@ -26,7 +30,7 @@ const ProfileLink = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<Avatar size={"sm"} src={authUser?.profilePicURL || ""} />
+				<Avatar size={"sm"} src={authUser?.profilePic || ""} />
 				<Box display={{ base: "none", md: "block" }}>Profile</Box>
 			</Link>
 		</Tooltip>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import userAtom from "../atoms/userAtom";
 import { useSetRecoilState } from "recoil";
 import useShowToast from "./useShowToast";
@@ -5,8 +6,10 @@ import useShowToast from "./useShowToast";
 const useLogout = () => {
 	const setUser = useSetRecoilState(userAtom);
 	const showToast = useShowToast();
+	const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-	const logout = async () => {
+	const handleLogout = async () => {
+		setIsLoggingOut(true);
 		try {
 			const res = await fetch("/api/users/logout", {
 				method: "POST",
@@ -21,14 +24,16 @@ const useLogout = () => {
 				return;
 			}
 
-			localStorage.removeItem("user-threads");
+			localStorage.removeItem("user");
 			setUser(null);
 		} catch (error) {
 			showToast("Error", error, "error");
+		} finally {
+			setIsLoggingOut(false);
 		}
 	};
 
-	return logout;
+	return { handleLogout, isLoggingOut }; 
 };
 
 export default useLogout;

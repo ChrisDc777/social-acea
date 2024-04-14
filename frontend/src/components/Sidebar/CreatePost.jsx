@@ -1,8 +1,10 @@
+import { AddIcon } from "@chakra-ui/icons";
 import {
 	Box,
 	Button,
 	CloseButton,
 	Flex,
+	FormControl,
 	Image,
 	Input,
 	Modal,
@@ -12,47 +14,84 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
+	Text,
 	Textarea,
 	Tooltip,
+	useColorModeValue,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { CreatePostLogo } from "../../assets/constants";
-import { BsFillImageFill } from "react-icons/bs";
 import { useRef, useState } from "react";
 import usePreviewImg from "../../hooks/usePreviewImg";
+import { BsFillImageFill } from "react-icons/bs";
+import { useRecoilState, useRecoilValue } from "recoil";
+import userAtom from "../../atoms/userAtom";
 import useShowToast from "../../hooks/useShowToast";
-import useAuthStore from "../../store/authStore";
-import usePostStore from "../../store/postStore";
-import useUserProfileStore from "../../store/userProfileStore";
-import { useLocation } from "react-router-dom";
-import { addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
-import { firestore, storage } from "../../firebase/firebase";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import postsAtom from "../../atoms/postsAtom";
+import { useParams } from "react-router-dom";
+import { CreatePostLogo } from "../../assets/constants";
+
+const MAX_CHAR = 500;
 
 const CreatePost = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [caption, setCaption] = useState("");
+	const [postText, setPostText] = useState("");
+	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
 	const imageRef = useRef(null);
-	const { handleImageChange, selectedFile, setSelectedFile } = usePreviewImg();
+	const [remainingChar, setRemainingChar] = useState(MAX_CHAR);
+	const user = useRecoilValue(userAtom);
 	const showToast = useShowToast();
-	const { isLoading, handleCreatePost } = useCreatePost();
+	const [loading, setLoading] = useState(false);
+	const [posts, setPosts] = useRecoilState(postsAtom);
+	const { username } = useParams();
 
-	const handlePostCreation = async () => {
+	const handleTextChange = (e) => {
+		const inputText = e.target.value;
+
+		if (inputText.length > MAX_CHAR) {
+			const truncatedText = inputText.slice(0, MAX_CHAR);
+			setPostText(truncatedText);
+			setRemainingChar(0);
+		} else {
+			setPostText(inputText);
+			setRemainingChar(MAX_CHAR - inputText.length);
+		}
+	};
+
+	const handleCreatePost = async () => {
+		setLoading(true);
 		try {
-			await handleCreatePost(selectedFile, caption);
+			const res = await fetch("/api/posts/create", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ postedBy: user._id, text: postText, img: imgUrl }),
+			});
+
+			const data = await res.json();
+			if (data.error) {
+				showToast("Error", data.error, "error");
+				return;
+			}
+			showToast("Success", "Post created successfully", "success");
+			if (username === user.username) {
+				setPosts([data, ...posts]);
+			}
 			onClose();
-			setCaption("");
-			setSelectedFile(null);
+			setPostText("");
+			setImgUrl("");
 		} catch (error) {
-			showToast("Error", error.message, "error");
+			showToast("Error", error, "error");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	return (
 		<>
-			<Tooltip
+		<Tooltip
 				hasArrow
-				label={"Create"}
+				label={"Search"}
 				placement='right'
 				ml={1}
 				openDelay={500}
@@ -73,43 +112,61 @@ const CreatePost = () => {
 				</Flex>
 			</Tooltip>
 
-			<Modal isOpen={isOpen} onClose={onClose} size='xl'>
+			{/* <Button
+				position={"fixed"}
+				bottom={10}
+				right={5}
+				bg={useColorModeValue("gray.300", "gray.dark")}
+				onClick={onOpen}
+				size={{ base: "sm", sm: "md" }}
+			>
+				<AddIcon />
+			</Button> */}
+
+			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 
-				<ModalContent bg={"black"} border={"1px solid gray"}>
+				<ModalContent>
 					<ModalHeader>Create Post</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody pb={6}>
-						<Textarea
-							placeholder='Post caption...'
-							value={caption}
-							onChange={(e) => setCaption(e.target.value)}
-						/>
+						<FormControl>
+							<Textarea
+								placeholder='Post content goes here..'
+								onChange={handleTextChange}
+								value={postText}
+							/>
+							<Text fontSize='xs' fontWeight='bold' textAlign={"right"} m={"1"} color={"gray.800"}>
+								{remainingChar}/{MAX_CHAR}
+							</Text>
 
-						<Input type='file' hidden ref={imageRef} onChange={handleImageChange} />
+							<Input type='file' hidden ref={imageRef} onChange={handleImageChange} />
 
-						<BsFillImageFill
-							onClick={() => imageRef.current.click()}
-							style={{ marginTop: "15px", marginLeft: "5px", cursor: "pointer" }}
-							size={16}
-						/>
-						{selectedFile && (
-							<Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>
-								<Image src={selectedFile} alt='Selected img' />
+							<BsFillImageFill
+								style={{ marginLeft: "5px", cursor: "pointer" }}
+								size={16}
+								onClick={() => imageRef.current.click()}
+							/>
+						</FormControl>
+
+						{imgUrl && (
+							<Flex mt={5} w={"full"} position={"relative"}>
+								<Image src={imgUrl} alt='Selected img' />
 								<CloseButton
+									onClick={() => {
+										setImgUrl("");
+									}}
+									bg={"gray.800"}
 									position={"absolute"}
 									top={2}
 									right={2}
-									onClick={() => {
-										setSelectedFile(null);
-									}}
 								/>
 							</Flex>
 						)}
 					</ModalBody>
 
 					<ModalFooter>
-						<Button mr={3} onClick={handlePostCreation} isLoading={isLoading}>
+						<Button colorScheme='blue' mr={3} onClick={handleCreatePost} isLoading={loading}>
 							Post
 						</Button>
 					</ModalFooter>
@@ -120,112 +177,3 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
-
-function useCreatePost() {
-	const showToast = useShowToast();
-	const [isLoading, setIsLoading] = useState(false);
-	const authUser = useAuthStore((state) => state.user);
-	const createPost = usePostStore((state) => state.createPost);
-	const addPost = useUserProfileStore((state) => state.addPost);
-	const userProfile = useUserProfileStore((state) => state.userProfile);
-	const { pathname } = useLocation();
-
-	const handleCreatePost = async (selectedFile, caption) => {
-		if (isLoading) return;
-		if (!selectedFile) throw new Error("Please select an image");
-		setIsLoading(true);
-		const newPost = {
-			caption: caption,
-			likes: [],
-			comments: [],
-			createdAt: Date.now(),
-			createdBy: authUser.uid,
-		};
-
-		try {
-			const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
-			const userDocRef = doc(firestore, "users", authUser.uid);
-			const imageRef = ref(storage, `posts/${postDocRef.id}`);
-
-			await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
-			await uploadString(imageRef, selectedFile, "data_url");
-			const downloadURL = await getDownloadURL(imageRef);
-
-			await updateDoc(postDocRef, { imageURL: downloadURL });
-
-			newPost.imageURL = downloadURL;
-
-			if (userProfile.uid === authUser.uid) createPost({ ...newPost, id: postDocRef.id });
-
-			if (pathname !== "/" && userProfile.uid === authUser.uid) addPost({ ...newPost, id: postDocRef.id });
-
-			showToast("Success", "Post created successfully", "success");
-		} catch (error) {
-			showToast("Error", error.message, "error");
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	return { isLoading, handleCreatePost };
-}
-
-// 1- COPY AND PASTE AS THE STARTER CODE FOR THE CRAETEPOST COMPONENT
-// import { Box, Flex, Tooltip } from "@chakra-ui/react";
-// import { CreatePostLogo } from "../../assets/constants";
-
-// const CreatePost = () => {
-// 	return (
-// 		<>
-// 			<Tooltip
-// 				hasArrow
-// 				label={"Create"}
-// 				placement='right'
-// 				ml={1}
-// 				openDelay={500}
-// 				display={{ base: "block", md: "none" }}
-// 			>
-// 				<Flex
-// 					alignItems={"center"}
-// 					gap={4}
-// 					_hover={{ bg: "whiteAlpha.400" }}
-// 					borderRadius={6}
-// 					p={2}
-// 					w={{ base: 10, md: "full" }}
-// 					justifyContent={{ base: "center", md: "flex-start" }}
-// 				>
-// 					<CreatePostLogo />
-// 					<Box display={{ base: "none", md: "block" }}>Create</Box>
-// 				</Flex>
-// 			</Tooltip>
-// 		</>
-// 	);
-// };
-
-// export default CreatePost;
-
-// 2-COPY AND PASTE FOR THE MODAL
-{
-	/* <Modal isOpen={isOpen} onClose={onClose} size='xl'>
-				<ModalOverlay />
-
-				<ModalContent bg={"black"} border={"1px solid gray"}>
-					<ModalHeader>Create Post</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody pb={6}>
-						<Textarea placeholder='Post caption...' />
-
-						<Input type='file' hidden />
-
-						<BsFillImageFill
-							style={{ marginTop: "15px", marginLeft: "5px", cursor: "pointer" }}
-							size={16}
-						/>
-					</ModalBody>
-
-					<ModalFooter>
-						<Button mr={3}>Post</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal> */
-}

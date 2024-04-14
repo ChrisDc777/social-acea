@@ -3,18 +3,22 @@ import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure } from "
 // import useAuthStore from "../../store/authStore";
 import userAtom from "../../atoms/userAtom";
 import { useRecoilValue } from "recoil";
-import { Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import { Link as RouterLink } from "react-router-dom";
 // import EditProfile from "./EditProfile";
 // import useFollowUser from "../../hooks/useFollowUser";
 import useFollowUnfollow from "../../hooks/useFollowUnfollow";
+import useGetUserProfile from "../../hooks/useGetUserProfile";
 
 const ProfileHeader = ({ userProfile }) => {
 	// const { userProfile } = useUserProfileStore();
+	// console.log("bleh2",userProfile);
 	const authUser = useRecoilValue(userAtom);
 	// const authUser = useAuthStore((state) => state.user);
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	// const { isOpen, onOpen, onClose } = useDisclosure();
 	// const { isFollowing, isUpdating, handleFollowUser } = useFollowUser(userProfile?.uid);
 	const {  handleFollowUnfollow, updating, following } = useFollowUnfollow(userProfile);
+	const navigate = useNavigate();
 
 	const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
 	const visitingAnotherProfileAndAuth = authUser && authUser.username !== userProfile.username;
@@ -41,7 +45,8 @@ const ProfileHeader = ({ userProfile }) => {
 								color={"black"}
 								_hover={{ bg: "whiteAlpha.800" }}
 								size={{ base: "xs", md: "sm" }}
-								onClick={onOpen}
+								onClick={() => navigate("/update")}
+								// onClick={onOpen}
 							>
 								Edit Profile
 							</Button>

@@ -19,42 +19,74 @@ import { FaComment } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Comment from "../Comment/Comment";
 import PostFooter from "../FeedPosts/PostFooter";
-import useUserProfileStore from "../../store/userProfileStore";
-import useAuthStore from "../../store/authStore";
+// import useUserProfileStore from "../../store/userProfileStore";
+// import useAuthStore from "../../store/authStore";
 import useShowToast from "../../hooks/useShowToast";
 import { useState } from "react";
-import { deleteObject, ref } from "firebase/storage";
-import { firestore, storage } from "../../firebase/firebase";
-import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import usePostStore from "../../store/postStore";
+// import { deleteObject, ref } from "firebase/storage";
+// import { firestore, storage } from "../../firebase/firebase";
+// import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
+// import usePostStore from "../../store/postStore";
 import Caption from "../Comment/Caption";
+
+import { useRecoilValue } from "recoil";
+import userAtom from "../../atoms/userAtom";
+import useGetUserProfile from "../../hooks/useGetUserProfile";
+import { useParams } from "react-router-dom";
 
 const ProfilePost = ({ post }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const userProfile = useUserProfileStore((state) => state.userProfile);
-	const authUser = useAuthStore((state) => state.user);
+	// const userProfile = useUserProfileStore((state) => state.userProfile);
+	const { username } = useParams(); // Get username from URL params
+  	const { userProfile, loading } = useGetUserProfile(username);
+	// const { userProfile, loading } = useGetUserProfile();
+	
+	console.log("bleh3",userProfile);
+	const authUser = useRecoilValue(userAtom);
 	const showToast = useShowToast();
 	const [isDeleting, setIsDeleting] = useState(false);
-	const deletePost = usePostStore((state) => state.deletePost);
-	const decrementPostsCount = useUserProfileStore((state) => state.deletePost);
+	// const deletePost = usePostStore((state) => state.deletePost);
+	// const decrementPostsCount = useUserProfileStore((state) => state.deletePost);
+
+	// const handleDeletePost1 = async () => {
+	// 	if (!window.confirm("Are you sure you want to delete this post?")) return;
+	// 	if (isDeleting) return;
+
+	// 	try {
+	// 		const imageRef = ref(storage, `posts/${post.id}`);
+	// 		await deleteObject(imageRef);
+	// 		const userRef = doc(firestore, "users", authUser.uid);
+	// 		await deleteDoc(doc(firestore, "posts", post.id));
+
+	// 		await updateDoc(userRef, {
+	// 			posts: arrayRemove(post.id),
+	// 		});
+
+	// 		deletePost(post.id);
+	// 		decrementPostsCount(post.id);
+	// 		showToast("Success", "Post deleted successfully", "success");
+	// 	} catch (error) {
+	// 		showToast("Error", error.message, "error");
+	// 	} finally {
+	// 		setIsDeleting(false);
+	// 	}
+	// };
 
 	const handleDeletePost = async () => {
-		if (!window.confirm("Are you sure you want to delete this post?")) return;
-		if (isDeleting) return;
-
 		try {
-			const imageRef = ref(storage, `posts/${post.id}`);
-			await deleteObject(imageRef);
-			const userRef = doc(firestore, "users", authUser.uid);
-			await deleteDoc(doc(firestore, "posts", post.id));
+			if (!window.confirm("Are you sure you want to delete this post?")) return;
+			if (isDeleting) return;
 
-			await updateDoc(userRef, {
-				posts: arrayRemove(post.id),
+			const res = await fetch(`/api/posts/${currentPost._id}`, {
+				method: "DELETE",
 			});
-
-			deletePost(post.id);
-			decrementPostsCount(post.id);
-			showToast("Success", "Post deleted successfully", "success");
+			const data = await res.json();
+			if (data.error) {
+				showToast("Error", data.error, "error");
+				return;
+			}
+			showToast("Success", "Post deleted", "success");
+			navigate(`/${user.username}`);
 		} catch (error) {
 			showToast("Error", error.message, "error");
 		} finally {
@@ -98,13 +130,13 @@ const ProfilePost = ({ post }) => {
 						<Flex>
 							<FaComment size={20} />
 							<Text fontWeight={"bold"} ml={2}>
-								{post.comments.length}
+								{post.replies.length}
 							</Text>
 						</Flex>
 					</Flex>
 				</Flex>
 
-				<Image src={post.imageURL} alt='profile post' w={"100%"} h={"100%"} objectFit={"cover"} />
+				<Image src={post.img} alt='profile post' w={"100%"} h={"100%"} objectFit={"cover"} />
 			</GridItem>
 
 			<Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={{ base: "3xl", md: "5xl" }}>
@@ -128,12 +160,12 @@ const ProfilePost = ({ post }) => {
 								justifyContent={"center"}
 								alignItems={"center"}
 							>
-								<Image src={post.imageURL} alt='profile post' />
+								<Image src={post.img} alt='profile post' />
 							</Flex>
 							<Flex flex={1} flexDir={"column"} px={10} display={{ base: "none", md: "flex" }}>
 								<Flex alignItems={"center"} justifyContent={"space-between"}>
 									<Flex alignItems={"center"} gap={4}>
-										<Avatar src={userProfile.profilePicURL} size={"sm"} name='As a Programmer' />
+										<Avatar src={userProfile.profilePic} size={"sm"} name='As a Programmer' />
 										<Text fontWeight={"bold"} fontSize={12}>
 											{userProfile.username}
 										</Text>

@@ -6,10 +6,13 @@ import AuthPage from "./pages/AuthPage";
 import PageLayout from "./Layouts/PageLayout/PageLayout";
 import ProfilePage from "./pages/ProfilePage";
 import UpdateProfilePage from "./components/Profile/UpdateProfilePage";
+import ChatPage from "./pages/ChatPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import './App.css'
 
 function App() {
   const user = useRecoilValue(userAtom);
+  // console.log(user);
 
   return (
     <>
@@ -22,8 +25,8 @@ function App() {
           {/* <Route path='/:username/post/:pid' element={<PostPage />} /> */}
 					
           <Route path='/update' element={user ? <UpdateProfilePage /> : <Navigate to='/auth' />} />
-          {/* <Route path='/chat' element={user ? <ChatPage /> : <Navigate to={"/auth"} />} />
-					<Route path='/settings' element={user ? <SettingsPage /> : <Navigate to={"/auth"} />} /> */}
+          <Route path='/chat' element={user ? <ChatPage /> : <Navigate to={"/auth"} />} />
+					<Route path='/settings' element={user ? <SettingsPage /> : <Navigate to={"/auth"} />} />
         </Routes>
       </PageLayout>
     </>

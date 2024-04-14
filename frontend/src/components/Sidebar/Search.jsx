@@ -18,16 +18,32 @@ import { SearchLogo } from "../../assets/constants";
 import useSearchUser from "../../hooks/useSearchUser";
 import { useRef } from "react";
 import SuggestedUser from "../SuggestedUsers/SuggestedUser";
+// import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import useShowToast from "../../hooks/useShowToast";
 
 const Search = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const searchRef = useRef(null);
-	const { user, isLoading, getUserProfile, setUser } = useSearchUser();
+	const showToast = useShowToast();
+	// const { userProfile, isLoading } = useGetUserProfileById();
+	const { user, isLoading, setUser, getUserProfileByUsername } = useSearchUser();
 
-	const handleSearchUser = (e) => {
+	const handleSearchUser = async (e) => {
 		e.preventDefault();
-		getUserProfile(searchRef.current.value);
-	};
+		const username = searchRef.current.value;
+        if (!username) {
+            showToast("Error", "Please enter a username", "error");
+            return;
+        }
+        // Call the getUserProfile function returned by the hook
+        try {
+            setUser(null); // Reset user state before fetching
+            getUserProfileByUsername(username);
+        } catch (error) {
+			console.error("Error fetching user profile:", error);
+			showToast("Error", "Error fetching user profile", "error");
+        }
+    };
 
 	return (
 		<>
@@ -63,7 +79,7 @@ const Search = () => {
 						<form onSubmit={handleSearchUser}>
 							<FormControl>
 								<FormLabel>Username</FormLabel>
-								<Input placeholder='asaprogrammer' ref={searchRef} />
+								<Input placeholder='oui' ref={searchRef} />
 							</FormControl>
 
 							<Flex w={"full"} justifyContent={"flex-end"}>

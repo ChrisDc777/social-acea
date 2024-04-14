@@ -1,5 +1,5 @@
 import { Box, Flex, Spinner } from "@chakra-ui/react";
-// import Sidebar from "../../components/Sidebar/Sidebar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilValue, useRecoilState } from "recoil";
@@ -16,7 +16,7 @@ const PageLayout = ({ children }) => {
     const user = useRecoilValue(userAtom);
     const [loading, setLoading] = useRecoilState(loadingAtom);
 	// const [user, loading] = useAuthState(auth);
-	const canRenderSidebar = pathname !== "/auth" && user;
+	const canRenderSidebar = pathname !== "/auth" && pathname !== "/update" && user;
 	const canRenderNavbar = !user && !loading && pathname !== "/auth";
     // const canRenderNavbar = !user && pathname !== "/auth";
 	
@@ -38,7 +38,7 @@ const PageLayout = ({ children }) => {
 			{/* sidebar on the left */}
 			{canRenderSidebar ? (
 				<Box w={{ base: "70px", md: "240px" }}>
-					{/* <Sidebar /> */}
+					<Sidebar />
 				</Box>
 			) : null}
 			{/* Navbar */}

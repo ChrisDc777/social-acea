@@ -47,10 +47,7 @@ const userSchema = mongoose.Schema(
 			ref: "Post",
 			default: [],
 		},
-		// postCount: {
-		// 	type: Number,
-		// 	default: 0,
-		// },
+
 	},
 	{
 		timestamps: true,

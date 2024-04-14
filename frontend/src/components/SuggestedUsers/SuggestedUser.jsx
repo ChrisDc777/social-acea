@@ -4,8 +4,9 @@ import useFollowUnfollow from "../../hooks/useFollowUnfollow";
 // import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import userAtom from "../../atoms/userAtom";
 
-const SuggestedUser = ({ user}) => {
+const SuggestedUser = ({ user }) => {
 	// const { isFollowing, isUpdating, handleFollowUser } = useFollowUser(user.uid);
 	// const authUser = useAuthStore((state) => state.user);
 	const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);

@@ -1,9 +1,8 @@
 import { Box, Link, Tooltip } from "@chakra-ui/react";
-import { HomeLogo } from "../../assets/constants";
-// import { AiFillHome } from "react-icons/ai";
+import {ChatLogo} from "../../assets/constants"
 import { Link as RouterLink } from "react-router-dom";
 
-const Home = () => {
+const Chat = () => {
 	return (
 		<Tooltip
 			hasArrow
@@ -15,7 +14,7 @@ const Home = () => {
 		>
 			<Link
 				display={"flex"}
-				to={"/"}
+				to={"/chat"}
 				as={RouterLink}
 				alignItems={"center"}
 				gap={4}
@@ -25,12 +24,11 @@ const Home = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<HomeLogo />
-				{/* <AiFillHome size={25} /> */}
-				<Box display={{ base: "none", md: "block" }}>Home</Box>
+				<ChatLogo />
+				<Box display={{ base: "none", md: "block" }}>Chat</Box>
 			</Link>
 		</Tooltip>
 	);
 };
 
-export default Home;
+export default Chat;

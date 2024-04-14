@@ -1,7 +1,7 @@
 import { Container, Flex, Link, Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react";
 import ProfileHeader from "../components/Profile/ProfileHeader";
 import ProfileTabs from "../components/Profile/ProfileTabs";
-// import ProfilePosts from "../components/Profile/ProfilePosts";
+import ProfilePosts from "../components/Profile/ProfilePosts";
 import useGetUserProfileById from "../hooks/useGetUserProfileById";
 import { useParams } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
@@ -9,6 +9,7 @@ import { Link as RouterLink } from "react-router-dom";
 const ProfilePage = () => {
 	const { username } = useParams();
 	const { userProfile, isLoading } = useGetUserProfileById(username);
+	console.log("bleh",userProfile);
 
 	const userNotFound = !isLoading && !userProfile;
 	if (userNotFound) return <UserNotFound />;
@@ -28,7 +29,7 @@ const ProfilePage = () => {
 				direction={"column"}
 			>
 				<ProfileTabs />
-				{/* <ProfilePosts /> */}
+				<ProfilePosts />
 			</Flex>
 		</Container>
 	);

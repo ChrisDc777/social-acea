@@ -10,6 +10,9 @@ const useGetUserProfileById = (username) => {
         const getUserProfile = async () => {
             try {
                 const res = await fetch(`/api/users/profile/${username}`);
+                if (!res.ok) {
+                    throw new Error("Failed to fetch user profile");
+                }
                 const data = await res.json();
                 if (data.error) {
                     showToast("Error", data.error, "error");
@@ -17,7 +20,7 @@ const useGetUserProfileById = (username) => {
                 }
                 if (data.isFrozen) {
                     setUserProfile(null);
-                    // setIsLoading(false);
+                    setIsLoading(false);
                     return;
                 }
                 setUserProfile(data);
@@ -29,7 +32,7 @@ const useGetUserProfileById = (username) => {
         };
 
         getUserProfile();
-    }, [username, showToast]);
+    }, [username]);
 
     return { userProfile, isLoading };
 };
