@@ -5,6 +5,30 @@ import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCooki
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
 
+const searchUserProfile = async (req, res) => {
+	// We will fetch user profile either with username or userId
+	// query is either username or userId
+	const { query } = req.params;
+
+    try {
+        let user;
+
+        // Using regular expression to match usernames starting with the query
+        const regexQuery = new RegExp('^' + query, 'i');
+
+        // Finding user by username
+        user = await User.find({ username: regexQuery }).select("-password").select("-updatedAt");
+
+        if (user.length === 0) return res.status(404).json({ error: "User not found" });
+
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+        console.log("Error in getUserProfile: ", err.message);
+    }
+  };
+  
+
 const getUserProfile = async (req, res) => {
 	// We will fetch user profile either with username or userId
 	// query is either username or userId
@@ -249,4 +273,5 @@ export {
 	getUserProfile,
 	getSuggestedUsers,
 	freezeAccount,
+	searchUserProfile,
 };

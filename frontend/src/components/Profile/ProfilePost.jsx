@@ -35,48 +35,23 @@ import useGetUserProfile from "../../hooks/useGetUserProfile";
 import { useParams } from "react-router-dom";
 // import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import {CommentLogo, LikeLogo} from "../../assets/constants"
+import { useNavigate } from "react-router-dom";
 
 const ProfilePost = ({ post }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	// const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { username } = useParams(); // Get username from URL params
 	console.log("params", username);
-  	// const { userProfile, loading } = useGetUserProfileById(username);
-	const { user, loading } = useGetUserProfile();
+  	const { user, loading } = useGetUserProfile();
 	
 	// console.log("bleh3",user);
 	
 	const authUser = useRecoilValue(userAtom);
-	// console.log("uid",authUser._id);
+	const currentPost = post
+	console.log("currentPost", post);
 	const showToast = useShowToast();
 	const [isDeleting, setIsDeleting] = useState(false);
-	// const deletePost = usePostStore((state) => state.deletePost);
-	// const decrementPostsCount = useUserProfileStore((state) => state.deletePost);
-
-	// const handleDeletePost1 = async () => {
-	// 	if (!window.confirm("Are you sure you want to delete this post?")) return;
-	// 	if (isDeleting) return;
-
-	// 	try {
-	// 		const imageRef = ref(storage, `posts/${post.id}`);
-	// 		await deleteObject(imageRef);
-	// 		const userRef = doc(firestore, "users", authUser.uid);
-	// 		await deleteDoc(doc(firestore, "posts", post.id));
-
-	// 		await updateDoc(userRef, {
-	// 			posts: arrayRemove(post.id),
-	// 		});
-
-	// 		deletePost(post.id);
-	// 		decrementPostsCount(post.id);
-	// 		showToast("Success", "Post deleted successfully", "success");
-	// 	} catch (error) {
-	// 		showToast("Error", error.message, "error");
-	// 	} finally {
-	// 		setIsDeleting(false);
-	// 	}
-	// };
-
+	const navigate = useNavigate();
+	
 	const handleDeletePost = async () => {
 		try {
 			if (!window.confirm("Are you sure you want to delete this post?")) return;

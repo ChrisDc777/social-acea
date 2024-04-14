@@ -9,7 +9,7 @@ import { Link as RouterLink } from "react-router-dom";
 const ProfilePage = () => {
 	const { username } = useParams();
 	const { userProfile, isLoading } = useGetUserProfileById(username);
-	console.log("bleh",userProfile);
+	// console.log("bleh",userProfile);
 
 	const userNotFound = !isLoading && !userProfile;
 	if (userNotFound) return <UserNotFound />;

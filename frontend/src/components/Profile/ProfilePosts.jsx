@@ -16,33 +16,6 @@ const ProfilePosts = () => {
 	// const { user, loading } = useGetUserProfile(username);
 	
 	const showToast = useShowToast();
-	// const [posts, setPosts] = useRecoilState(postsAtom);
-	// const [fetchingPosts, setFetchingPosts] = useState(true);
-	// console.log("posts", username);
-	// useEffect(() => {
-	// 	const getPosts = async () => {
-	// 		if (!user) return;
-	// 		setFetchingPosts(true);
-	// 		try {
-	// 			const res = await fetch(`/api/posts/user/${username}`);
-	// 			if (!res.ok) {
-	// 				throw new Error('Failed to fetch posts');
-	// 			}
-	// 			const data = await res.json();
-				
-	// 			setPosts(data);
-				
-	// 		} catch (error) {
-	// 			showToast("Error", error.message, "error");
-	// 			setPosts([]);
-	// 		} finally {
-	// 			setFetchingPosts(false);
-	// 			console.log("data", data);
-	// 		}
-	// 	};
-		
-	// 	getPosts();
-	// }, [username, showToast, setPosts, user]);
 
 	const noPostsFound = !isLoading && posts.length === 0;
 	// console.log("posts", posts);

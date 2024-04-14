@@ -9,7 +9,7 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../../atoms/userAtom";
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
-	console.log("postedBy", post);
+	// console.log("postedBy", post);
 	const { isCommenting, handlePostComment } = usePostComment();
 	const [comment, setComment] = useState("");
 	const authUser = useRecoilValue(userAtom);
@@ -18,16 +18,28 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 	const { handleLikePost, isLiked, likes } = useLikePost(post);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
+	const [initialIsLiked, setIsLiked] = useState(isLiked);
+	const [initialLikes, setLikes] = useState(likes);
+
 	const handleSubmitComment = async () => {
 		await handlePostComment(post, comment);
 		setComment("");
 		commentRef.current.focus();
 	};
 
+	const handleLike = async () => {
+		// Call the original handleLikePost function
+		await handleLikePost();
+		
+		// Update the like status and count
+		setIsLiked(!initialIsLiked); // Toggle like status
+		setLikes(initialIsLiked ? initialLikes - 1 : initialLikes + 1); // Update like count
+	};
+
 	return (
 		<Box mb={10} marginTop={"auto"}>
 			<Flex alignItems={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
-				<Box onClick={handleLikePost} cursor={"pointer"} fontSize={18}>
+				<Box onClick={handleLike} cursor={"pointer"} fontSize={18}>
 					{!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
 				</Box>
 
@@ -36,7 +48,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 				</Box>
 			</Flex>
 			<Text fontWeight={600} fontSize={"sm"}>
-				{likes} likes
+				{initialLikes} likes
 			</Text>
 
 			{isProfilePage && (

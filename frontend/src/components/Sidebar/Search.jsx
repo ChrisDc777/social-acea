@@ -26,7 +26,7 @@ const Search = () => {
 	const searchRef = useRef(null);
 	const showToast = useShowToast();
 	// const { userProfile, isLoading } = useGetUserProfileById();
-	const { user, isLoading, setUser, getUserProfileByUsername } = useSearchUser();
+	const { user, isLoading, setUser, getUserProfile } = useSearchUser();
 
 	const handleSearchUser = async (e) => {
 		e.preventDefault();
@@ -38,7 +38,7 @@ const Search = () => {
         // Call the getUserProfile function returned by the hook
         try {
             setUser(null); // Reset user state before fetching
-            getUserProfileByUsername(username);
+            getUserProfile(username);
         } catch (error) {
 			console.error("Error fetching user profile:", error);
 			showToast("Error", "Error fetching user profile", "error");

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 // import EditProfile from "./EditProfile";
 import useFollowUnfollow from "../../hooks/useFollowUnfollow";
 import useGetUserProfile from "../../hooks/useGetUserProfile";
+import { SettingsLogo } from "../../assets/constants";
+import { Link } from "react-router-dom";
 
 const ProfileHeader = ({ userProfile }) => {
 	// const { userProfile } = useUserProfileStore();
@@ -47,6 +49,9 @@ const ProfileHeader = ({ userProfile }) => {
 							>
 								Edit Profile
 							</Button>
+							<Link to='/settings'>
+								<SettingsLogo/>
+							</Link>
 						</Flex>
 					)}
 					{visitingAnotherProfileAndAuth && (
