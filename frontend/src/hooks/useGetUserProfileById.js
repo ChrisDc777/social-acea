@@ -9,6 +9,7 @@ const useGetUserProfileById = (username) => {
     useEffect(() => {
         const getUserProfile = async () => {
             try {
+                setIsLoading(true);
                 const res = await fetch(`/api/users/profile/${username}`);
                 if (!res.ok) {
                     throw new Error("Failed to fetch user profile");
@@ -16,6 +17,7 @@ const useGetUserProfileById = (username) => {
                 const data = await res.json();
                 if (data.error) {
                     showToast("Error", data.error, "error");
+                    setIsLoading(false);
                     return;
                 }
                 if (data.isFrozen) {
@@ -24,14 +26,16 @@ const useGetUserProfileById = (username) => {
                     return;
                 }
                 setUserProfile(data);
-            } catch (error) {
-                showToast("Error", error.message, "error");
-            } finally {
                 setIsLoading(false);
+            } catch (error) {
+                setIsLoading(false);
+                showToast("Error", error.message, "error");
             }
         };
-
-        getUserProfile();
+        if (username) {
+            getUserProfile();
+        }
+        
     }, [username]);
 
     return { userProfile, isLoading };

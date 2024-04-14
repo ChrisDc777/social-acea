@@ -33,12 +33,14 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../../atoms/userAtom";
 import useGetUserProfile from "../../hooks/useGetUserProfile";
 import { useParams } from "react-router-dom";
+import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 
 const ProfilePost = ({ post }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	// const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { username } = useParams(); // Get username from URL params
-  	const { userProfile, loading } = useGetUserProfile(username);
+	console.log("params", username);
+  	const { userProfile, loading } = useGetUserProfileById(username);
 	// const { userProfile, loading } = useGetUserProfile();
 	
 	console.log("bleh3",userProfile);
