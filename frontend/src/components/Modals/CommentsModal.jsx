@@ -11,17 +11,21 @@ import {
 } from "@chakra-ui/react";
 import Comment from "../Comment/Comment";
 import usePostComment from "../../hooks/usePostComment";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const CommentsModal = ({ isOpen, onClose, post }) => {
 	const { handlePostComment, isCommenting } = usePostComment();
+	const [comment, setComment] = useState("");
 	const commentRef = useRef(null);
 	const commentsContainerRef = useRef(null);
 	const handleSubmitComment = async (e) => {
 		// do not refresh the page, prevent it
-		e.preventDefault();
-		await handlePostComment(post.id, commentRef.current.value);
-		commentRef.current.value = "";
+		// e.preventDefault();
+		// await handlePostComment(post, commentRef.current.value);
+		// commentRef.current.value = "";
+		await handlePostComment(post, comment);
+		setComment("");
+		commentRef.current.focus();
 	};
 
 	useEffect(() => {
@@ -55,7 +59,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 						))}
 					</Flex>
 					<form onSubmit={handleSubmitComment} style={{ marginTop: "2rem" }}>
-						<Input placeholder='Comment' size={"sm"} ref={commentRef} />
+						<Input placeholder='Comment' size={"sm"} onChange={(e) => setComment(e.target.value)} value= {comment} ref={commentRef} />
 						<Flex w={"full"} justifyContent={"flex-end"}>
 							<Button type='submit' ml={"auto"} size={"sm"} my={4} isLoading={isCommenting}>
 								Post

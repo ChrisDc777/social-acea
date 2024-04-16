@@ -66,7 +66,7 @@ const Conversation = ({ conversation, isOnline }) => {
 					{/* <Image src='/verified.png' w={4} h={4} ml={1} /> */}
 				</Text>
 				<Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
-					{currentUser._id === lastMessage.sender ? (
+					{currentUser.user._id === lastMessage.sender ? (
 						<Box color={lastMessage.seen ? "blue.400" : ""}>
 							<BsCheck2All size={16} />
 						</Box>

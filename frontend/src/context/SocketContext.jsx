@@ -17,7 +17,7 @@ export const SocketContextProvider = ({ children }) => {
 	useEffect(() => {
 		const socket = io("/", {
 			query: {
-				userId: user?._id,
+				userId: user?.user._id,
 			},
 		});
 
@@ -27,7 +27,7 @@ export const SocketContextProvider = ({ children }) => {
 			setOnlineUsers(users);
 		});
 		return () => socket && socket.close();
-	}, [user?._id]);
+	}, [user?.user._id]);
 
 	return <SocketContext.Provider value={{ socket, onlineUsers }}>{children}</SocketContext.Provider>;
 };

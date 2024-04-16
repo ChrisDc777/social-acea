@@ -51,8 +51,8 @@ const SuggestedUsers = () => {
 						</Text>
 					</Flex>
 
-					{suggestedUsers.map((user) => (
-						<SuggestedUser user={user} key={user.id} />
+					{suggestedUsers.map((user, index) => (
+						<SuggestedUser user={user} key={user._id || index} />
 					))}
 				</>
 			):(

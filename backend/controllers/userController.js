@@ -1,7 +1,9 @@
 import User from "../models/userModel.js";
 import Post from "../models/postModel.js";
 import bcrypt from "bcryptjs";
+// import { generateTokenAndSetCookie} from "../utils/helpers/generateTokenAndSetCookie.js";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
+// import { setCookie } from "../utils/helpers/generateTokenAndSetCookie.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
 
@@ -95,7 +97,7 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
 	try {
-		console.log("Login user");
+		
 		const { username, password } = req.body;
 		const user = await User.findOne({ username });
 		const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
@@ -107,16 +109,25 @@ const loginUser = async (req, res) => {
 			await user.save();
 		}
 
-		generateTokenAndSetCookie(user._id, res);
+		const token = generateTokenAndSetCookie(user._id, res);
+
+		// Set the token as a cookie if the request is coming from a web client
+		// if (req.headers["user-agent"].includes("Chrome")) {
+		// 	setCookie(res, token);
+		//   }
 
 		res.status(200).json({
-			_id: user._id,
-			name: user.name,
-			email: user.email,
-			username: user.username,
-			bio: user.bio,
-			profilePic: user.profilePic,
+			token: token,
+			user: {
+				_id: user._id,
+				name: user.name,
+				email: user.email,
+				username: user.username,
+				bio: user.bio,
+				profilePic: user.profilePic,
+			},
 		});
+		console.log("Login user");
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 		console.log("Error in loginUser: ", error.message);
@@ -127,6 +138,8 @@ const logoutUser = (req, res) => {
 	try {
 		res.cookie("jwt", "", { maxAge: 1 });
 		res.status(200).json({ message: "User logged out successfully" });
+		console.log("Logout user");
+		// console.log("User-Agent:", req.headers["user-agent"]);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 		console.log("Error in signupUser: ", err.message);
@@ -189,6 +202,10 @@ const updateUser = async (req, res) => {
 			const uploadedResponse = await cloudinary.uploader.upload(profilePic);
 			profilePic = uploadedResponse.secure_url;
 		}
+		// const token = localStorage.getItem("user.token");
+		console.log(req.headers);
+
+		const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
 
 		user.name = name || user.name;
 		user.email = email || user.email;
@@ -213,7 +230,10 @@ const updateUser = async (req, res) => {
 		// password should be null in response
 		user.password = null;
 
-		res.status(200).json(user);
+		res.status(200).json({
+			token: token,
+			user: user
+		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 		console.log("Error in updateUser: ", err.message);

@@ -19,8 +19,8 @@ const ProfileHeader = ({ userProfile }) => {
 	const {  handleFollowUnfollow, updating, following } = useFollowUnfollow(userProfile);
 	const navigate = useNavigate();
 
-	const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
-	const visitingAnotherProfileAndAuth = authUser && authUser.username !== userProfile.username;
+	const visitingOwnProfileAndAuth = authUser && authUser.user.username === userProfile.username;
+	const visitingAnotherProfileAndAuth = authUser && authUser.user.username !== userProfile.username;
 
 	return (
 		<Flex gap={{ base: 4, sm: 10 }} py={10} direction={{ base: "column", sm: "row" }}>

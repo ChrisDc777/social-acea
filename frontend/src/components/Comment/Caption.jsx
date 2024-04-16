@@ -11,14 +11,14 @@ const Caption = ({ post }) => {
 
 	return (
 		<Flex gap={4}>
-			<Link to={`/${userProfile.username}`}>
-				<Avatar src={userProfile.profilePic} size={"sm"} />
+			<Link to={`/${userProfile.user.username}`}>
+				<Avatar src={userProfile.user.profilePic} size={"sm"} />
 			</Link>
 			<Flex direction={"column"}>
 				<Flex gap={2} alignItems={"center"}>
-					<Link to={`/${userProfile.username}`}>
+					<Link to={`/${userProfile.user.username}`}>
 						<Text fontWeight={"bold"} fontSize={12}>
-							{userProfile.username}
+							{userProfile.user.username}
 						</Text>
 					</Link>
 					<Text fontSize={14}>{post.text}</Text>

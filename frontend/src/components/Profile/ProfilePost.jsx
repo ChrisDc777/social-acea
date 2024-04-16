@@ -147,12 +147,12 @@ const ProfilePost = ({ post }) => {
 							<Flex flex={1} flexDir={"column"} px={10} display={{ base: "none", md: "flex" }}>
 								<Flex alignItems={"center"} justifyContent={"space-between"}>
 									<Flex alignItems={"center"} gap={4}>
-										<Avatar src={user.profilePic} size={"sm"} name='As a Programmer' />
+										<Avatar src={user.profilePic} size={"sm"} name='Oui' />
 										<Text fontWeight={"bold"} fontSize={12}>
 											{user.username}
 										</Text>
 									</Flex>
-									{authUser?._id === user._id && (
+									{authUser?.user._id === user._id && (
 										<Button
 											size={"sm"}
 											bg={"transparent"}
