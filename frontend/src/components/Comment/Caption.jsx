@@ -5,20 +5,20 @@ import { timeAgo } from "../../utils/timeAgo";
 import { useRecoilValue } from "recoil";
 import userAtom from "../../atoms/userAtom";
 
-const Caption = ({ post }) => {
+const Caption = ({ post, user }) => {
 	// const userProfile = useUserProfileStore((state) => state.userProfile);
-	const userProfile = useRecoilValue(userAtom);
+	// const userProfile = useRecoilValue(userAtom);
 
 	return (
 		<Flex gap={4}>
-			<Link to={`/${userProfile.user.username}`}>
-				<Avatar src={userProfile.user.profilePic} size={"sm"} />
+			<Link to={`/${user.username}`}>
+				<Avatar src={user.profilePic} size={"sm"} />
 			</Link>
 			<Flex direction={"column"}>
 				<Flex gap={2} alignItems={"center"}>
-					<Link to={`/${userProfile.user.username}`}>
+					<Link to={`/${user.username}`}>
 						<Text fontWeight={"bold"} fontSize={12}>
-							{userProfile.user.username}
+							{user.username}
 						</Text>
 					</Link>
 					<Text fontSize={14}>{post.text}</Text>

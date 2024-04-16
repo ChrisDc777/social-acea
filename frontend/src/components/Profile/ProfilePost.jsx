@@ -170,7 +170,7 @@ const ProfilePost = ({ post }) => {
 
 								<VStack w='full' alignItems={"start"} maxH={"350px"} overflowY={"auto"}>
 									{/* CAPTION */}
-									{post.text && <Caption post={post} />}
+									{post.text && <Caption post={post} user={user}/>}
 									{/* COMMENTS */}
 									{post.replies.map((comment) => (
 										<Comment key={comment.userId} comment={comment} />
