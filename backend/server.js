@@ -9,7 +9,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
 import { app, server } from "./socket/socket.js";
 import job from "./cron/cron.js";
-// import cors from "cors";
+import cors from "cors";
 // app.use(cors({
 // 	origin: "http://localhost:3000/"
 // }));
@@ -39,9 +39,12 @@ app.use("/api/posts", postRoutes);
 app.use("/api/messages", messageRoutes);
 
 // http://localhost:5000 => backend,frontend
+console.log("process.env", process.env.NODE_ENV);
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV.trim() === "production") {
 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+	console.log("process.env", process.env.NODE_ENV);
+	console.log("dirname", __dirname);
 
 	// react app
 	app.get("*", (req, res) => {
