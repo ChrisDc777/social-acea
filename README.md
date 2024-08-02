@@ -1,6 +1,6 @@
 # TheGram
 
-TheGram is a social media platform with all the modern features(under development)
+TheGram is a social media platform with all the modern features. 
 
 ## Installation
 
