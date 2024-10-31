@@ -20,7 +20,7 @@ const ProfileLink = () => {
 		>
 			<Link
 				display={"flex"}
-				to={`/${authUser?.username}`}
+				to={`/${authUser?.user.username}`}
 				as={RouterLink}
 				alignItems={"center"}
 				gap={4}
@@ -30,7 +30,7 @@ const ProfileLink = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<Avatar size={"sm"} src={authUser?.profilePic || ""} />
+				<Avatar size={"sm"} src={authUser?.user.profilePic || ""} />
 				<Box display={{ base: "none", md: "block" }}>Profile</Box>
 			</Link>
 		</Tooltip>

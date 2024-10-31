@@ -72,7 +72,7 @@ const ChatPage = () => {
 				return;
 			}
 
-			const messagingYourself = searchedUser._id === currentUser._id;
+			const messagingYourself = searchedUser._id === currentUser.user._id;
 			if (messagingYourself) {
 				showToast("Error", "You cannot message yourself", "error");
 				return;

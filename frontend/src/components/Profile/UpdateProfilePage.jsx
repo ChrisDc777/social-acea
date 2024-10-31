@@ -21,10 +21,10 @@ export default function UpdateProfilePage() {
 	const navigate = useNavigate();
 	const [user, setUser] = useRecoilState(userAtom);
 	const [inputs, setInputs] = useState({
-		name: user.name,
-		username: user.username,
-		email: user.email,
-		bio: user.bio,
+		name: user.user.name,
+		username: user.user.username,
+		email: user.user.email,
+		bio: user.user.bio,
 		password: "",
 	});
 	const fileRef = useRef(null);
@@ -39,7 +39,7 @@ export default function UpdateProfilePage() {
 		if (updating) return;
 		setUpdating(true);
 		try {
-			const res = await fetch(`/api/users/update/${user._id}`, {
+			const res = await fetch(`/api/users/update/${user.user._id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -78,7 +78,7 @@ export default function UpdateProfilePage() {
 					<FormControl id='userName'>
 						<Stack direction={["column", "row"]} spacing={6}>
 							<Center>
-								<Avatar size='xl' boxShadow={"md"} src={imgUrl || user.profilePic} />
+								<Avatar size='xl' boxShadow={"md"} src={imgUrl || user.user.profilePic} />
 							</Center>
 							<Center w='full'>
 								<Button w='full' onClick={() => fileRef.current.click()}>
@@ -146,7 +146,7 @@ export default function UpdateProfilePage() {
 							_hover={{
 								bg: "red.500",
 							}}
-							onClick={() => navigate(`/${user.username}`)}
+							onClick={() => navigate(`/${user.user.username}`)}
 						>
 							Cancel
 						</Button>

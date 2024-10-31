@@ -3,7 +3,7 @@ import { Avatar, Box, Button, Flex, VStack } from "@chakra-ui/react";
 import useFollowUnfollow from "../../hooks/useFollowUnfollow";
 // import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import userAtom from "../../atoms/userAtom";
 
 const SuggestedUser = ({ user }) => {
@@ -11,7 +11,7 @@ const SuggestedUser = ({ user }) => {
 	// const authUser = useAuthStore((state) => state.user);
 	const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
 
-	const authUser = useRecoilState(userAtom);
+	const authUser = useRecoilValue(userAtom);
 
 	// const onFollowUser = async () => {
 	// 	await handleFollowUser();
@@ -40,7 +40,7 @@ const SuggestedUser = ({ user }) => {
 					</Box>
 				</VStack>
 			</Flex>
-			{authUser._id !== user._id && (
+			{authUser.user._id !== user._id && (
 				<Button
 					fontSize={13}
 					bg={"transparent"}

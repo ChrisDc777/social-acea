@@ -6,7 +6,7 @@ import postsAtom from "../atoms/postsAtom";
 
 const useLikePost = (post) => {
     const user = useRecoilValue(userAtom);
-    const [liked, setLiked] = useState(post.likes.includes(user?._id));
+    const [liked, setLiked] = useState(post.likes.includes(user?.user._id));
     const [isLiking, setIsLiking] = useState(false);
     const [posts, setPosts] = useRecoilState(postsAtom);
     const showToast = useShowToast();
@@ -34,7 +34,7 @@ const useLikePost = (post) => {
 
             const updatedPosts = posts.map((p) => {
                 if (p._id === post._id) {
-                    return { ...p, likes: liked ? p.likes.filter((id) => id !== user._id) : [...p.likes, user._id] };
+                    return { ...p, likes: liked ? p.likes.filter((id) => id !== user.user._id) : [...p.likes, user.user._id] };
                 }
                 return p;
             });

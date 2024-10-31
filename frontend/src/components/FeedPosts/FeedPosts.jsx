@@ -5,10 +5,14 @@ import useShowToast from "../../hooks/useShowToast";
 import { useRecoilState } from "recoil";
 import postsAtom from "../../atoms/postsAtom";
 // import useGetFeedPosts from "../../hooks/useGetFeedPosts";
+import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 
 
 const FeedPosts = () => {
 	// const { isLoading, posts } = useGetFeedPosts();
+	// let say = "chrisdcosta777";
+	// const { userProfile, isLoading } = useGetUserProfileById(say);
+	// console.log("watchusay",userProfile);
     const [posts, setPosts] = useRecoilState(postsAtom);
     
 	const [loading, setLoading] = useState(true);

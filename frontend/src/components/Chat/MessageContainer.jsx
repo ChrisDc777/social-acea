@@ -8,6 +8,8 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../../atoms/userAtom";
 import { useSocket } from "../../context/SocketContext.jsx";
 import messageSound from "../../assets/sounds/message.mp3";
+// import sound from "../../assets/sounds/sounds.mp3";
+
 
 const MessageContainer = () => {
 	const showToast = useShowToast();
@@ -52,7 +54,7 @@ const MessageContainer = () => {
 	}, [socket, selectedConversation, setConversations]);
 
 	useEffect(() => {
-		const lastMessageIsFromOtherUser = messages.length && messages[messages.length - 1].sender !== currentUser._id;
+		const lastMessageIsFromOtherUser = messages.length && messages[messages.length - 1].sender !== currentUser.user._id;
 		if (lastMessageIsFromOtherUser) {
 			socket.emit("markMessagesAsSeen", {
 				conversationId: selectedConversation._id,
@@ -76,7 +78,7 @@ const MessageContainer = () => {
 				});
 			}
 		});
-	}, [socket, currentUser._id, messages, selectedConversation]);
+	}, [socket, currentUser.user._id, messages, selectedConversation]);
 
 	useEffect(() => {
 		messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -152,7 +154,7 @@ const MessageContainer = () => {
 							direction={"column"}
 							ref={messages.length - 1 === messages.indexOf(message) ? messageEndRef : null}
 						>
-							<Message message={message} ownMessage={currentUser._id === message.sender} />
+							<Message message={message} ownMessage={currentUser.user._id === message.sender} />
 						</Flex>
 					))}
 			</Flex>
